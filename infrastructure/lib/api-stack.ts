@@ -29,10 +29,16 @@ export class ApiStack extends cdk.Stack {
           image: ecs.ContainerImage.fromAsset(
             path.join(__dirname, "..", "..", "backend")
           ),
+          containerPort: 3000,
         },
         minHealthyPercent: 50,
       }
     );
+
+    service.targetGroup.configureHealthCheck({
+      path: "/health",
+      healthyHttpCodes: "200",
+    });
 
     this.albDnsName = service.loadBalancer.loadBalancerDnsName;
   }
