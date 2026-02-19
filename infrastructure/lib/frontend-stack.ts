@@ -1,18 +1,21 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { Network } from './network-con';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import * as elbv2 from 'aws-cdk-lib/aws-elasticloadbalancingv2';
+
+
+export interface FrontendStaticStackProps extends cdk.StackProps {
+  apiAlbDnsName: string;
+}
 
 export class FrontendStaticStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props: FrontendStaticStackProps) {
     super(scope, id, props);
-    
-    const network = new Network(this, 'Network');
+
+    const apiAlbDnsName = props.apiAlbDnsName;
 
     // 1) S3（Private）
     const siteBucket = new s3.Bucket(this, 'SiteBucket', {
@@ -36,11 +39,6 @@ export class FrontendStaticStack extends cdk.Stack {
       },
     });
 
-    const lb = new elbv2.ApplicationLoadBalancer(this, 'LB', {
-      vpc: network.vpc,
-      internetFacing: true,
-    });
-
     // 3) CloudFront Distribution
     const distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
       defaultRootObject: 'index.html',
@@ -52,10 +50,9 @@ export class FrontendStaticStack extends cdk.Stack {
       },
       additionalBehaviors: {
         'api/*': {
-          origin: new origins.LoadBalancerV2Origin(lb, {
-            protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,
-          }),
-          cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+          origin: new origins.HttpOrigin(apiAlbDnsName, {
+            protocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY,
+          }), cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
           originRequestPolicy: cloudfront.OriginRequestPolicy.ALL_VIEWER,
           allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
         }
