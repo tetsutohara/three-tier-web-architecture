@@ -19,21 +19,18 @@ export class ApiStack extends cdk.Stack {
       vpc: props.vpc
     });
 
-    const service = new ecsPatterns.ApplicationLoadBalancedFargateService(
-      this,
-      "ApiService",
-      {
-        cluster,
-        publicLoadBalancer: true,
-        taskImageOptions: {
-          image: ecs.ContainerImage.fromAsset(
-            path.join(__dirname, "..", "..", "backend")
-          ),
-          containerPort: 3000,
-        },
-        minHealthyPercent: 50,
-      }
-    );
+    const service = new ecsPatterns.ApplicationLoadBalancedFargateService(this, "ApiService", {
+      cluster,
+      publicLoadBalancer: true,
+      taskSubnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
+      taskImageOptions: {
+        image: ecs.ContainerImage.fromAsset(
+          path.join(__dirname, "..", "..", "backend")
+        ),
+        containerPort: 3000,
+      },
+      minHealthyPercent: 50,
+    });
 
     service.targetGroup.configureHealthCheck({
       path: "/health",
