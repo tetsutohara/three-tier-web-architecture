@@ -10,9 +10,10 @@
     "dev": "tsx ./src/ts/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "npx ts-node-esm src/server.ts"
   },
   "dependencies": {
+    "aws-jwt-verify": "^5.1.1",
     "express": "^5.2.1",
     "typescript": "^5.9.3"
   },

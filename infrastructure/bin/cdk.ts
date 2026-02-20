@@ -3,6 +3,7 @@ import * as cdk from 'aws-cdk-lib/core';
 import { NetworkStack } from '../lib/network-stack';
 import { ApiStack } from '../lib/api-stack';
 import { FrontendStaticStack } from '../lib/frontend-stack';
+import { AuthStack } from '../lib/cognito-login';
 
 
 const app = new cdk.App();
@@ -19,7 +20,12 @@ const api = new ApiStack(app, "ApiStack", {
   vpc: network.vpc,
 });
 
-new FrontendStaticStack(app, "FrontendStack", {
+const frontend = new FrontendStaticStack(app, "FrontendStack", {
   env,
   apiAlbDnsName: api.albDnsName,
 });
+
+const auth = new AuthStack(app, "AuthStack", {
+  env,
+  // distribution: frontend.distribution
+})
