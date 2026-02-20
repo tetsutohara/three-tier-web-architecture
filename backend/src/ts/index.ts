@@ -7,7 +7,7 @@ app.get('/', (req: Request, res: Response) => {
   res.status(200).type('text/plain').send('Hello World!');
 });
 
-app.get("/health", (req: Request, res: Response) => {
+app.get("/api/health", (req: Request, res: Response) => {
   res.status(200).send("OK")
 });
 
