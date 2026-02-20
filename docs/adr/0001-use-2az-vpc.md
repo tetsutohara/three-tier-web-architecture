@@ -1,7 +1,7 @@
 # 0001 - Use 2 Availability Zones for VPC
 
 ## Status
-Accepted
+Accepted (NAT-based outbound design amended by ADR 0003)
 
 ## Context
 
