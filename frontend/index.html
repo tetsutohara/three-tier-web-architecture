@@ -2,12 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
+    <title>Auth Test</title>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <div style="padding: 24px; font-family: sans-serif">
+      <h1>Cognito Auth Test</h1>
+
+      <button id="btn-login">Login</button>
+      <button id="btn-logout" style="margin-left: 8px">Logout</button>
+      <button id="btn-refresh" style="margin-left: 8px">Refresh</button>
+
+      <h3 style="margin-top: 16px">My user id (sub)</h3>
+      <pre id="out-sub">(not signed in)</pre>
+
+      <h3 style="margin-top: 16px">Debug</h3>
+      <pre id="out-debug"></pre>
+    </div>
+
+    <script type="module" src="/src/ts/main.ts"></script>
   </body>
 </html>
