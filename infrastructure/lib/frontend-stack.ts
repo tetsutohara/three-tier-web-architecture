@@ -12,6 +12,7 @@ export interface FrontendStaticStackProps extends cdk.StackProps {
 }
 
 export class FrontendStaticStack extends cdk.Stack {
+  public readonly distribution: cloudfront.Distribution
   constructor(scope: Construct, id: string, props: FrontendStaticStackProps) {
     super(scope, id, props);
 
@@ -40,7 +41,7 @@ export class FrontendStaticStack extends cdk.Stack {
     });
 
     // 3) CloudFront Distribution
-    const distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
+    this.distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
       defaultRootObject: 'index.html',
       defaultBehavior: {
         origin: origins.S3BucketOrigin.withOriginAccessControl(siteBucket),
@@ -60,7 +61,7 @@ export class FrontendStaticStack extends cdk.Stack {
     });
 
     // 4) Link OAC to Origin of Distribution (overwrite by L1)
-    const cfnDist = distribution.node.defaultChild as cloudfront.CfnDistribution;
+    const cfnDist = this.distribution.node.defaultChild as cloudfront.CfnDistribution;
     cfnDist.addPropertyOverride(
       'DistributionConfig.Origins.0.OriginAccessControlId',
       oac.attrId
@@ -80,7 +81,7 @@ export class FrontendStaticStack extends cdk.Stack {
         principals: [new iam.ServicePrincipal('cloudfront.amazonaws.com')],
         conditions: {
           StringEquals: {
-            'AWS:SourceArn': `arn:aws:cloudfront::${cdk.Stack.of(this).account}:distribution/${distribution.distributionId}`,
+            'AWS:SourceArn': `arn:aws:cloudfront::${cdk.Stack.of(this).account}:distribution/${this.distribution.distributionId}`,
           },
         },
       })
@@ -90,12 +91,12 @@ export class FrontendStaticStack extends cdk.Stack {
     new s3deploy.BucketDeployment(this, 'DeployFrontend', {
       sources: [s3deploy.Source.asset('../frontend/dist')],
       destinationBucket: siteBucket,
-      distribution,
+      distribution: this.distribution,
       distributionPaths: ['/*'],
     });
 
     new cdk.CfnOutput(this, 'CloudFrontUrl', {
-      value: `https://${distribution.domainName}`,
+      value: `https://${this.distribution.domainName}`,
     });
   }
 }
