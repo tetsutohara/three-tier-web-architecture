@@ -1,25 +1,47 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auth Test</title>
-  </head>
-  <body>
-    <div style="padding: 24px; font-family: sans-serif">
-      <h1>Cognito Auth Test</h1>
 
-      <button id="btn-login">Login</button>
-      <button id="btn-logout" style="margin-left: 8px">Logout</button>
-      <button id="btn-refresh" style="margin-left: 8px">Refresh</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auth Test</title>
+</head>
 
-      <h3 style="margin-top: 16px">My user id (sub)</h3>
-      <pre id="out-sub">(not signed in)</pre>
+<body>
+  <div style="padding: 24px; font-family: sans-serif">
+    <h1>Cognito Auth Test</h1>
 
-      <h3 style="margin-top: 16px">Debug</h3>
-      <pre id="out-debug"></pre>
-    </div>
+    <button id="btn-login">Login</button>
+    <button id="btn-logout" style="margin-left: 8px">Logout</button>
+    <button id="btn-refresh" style="margin-left: 8px">Refresh</button>
 
-    <script type="module" src="/src/ts/main.ts"></script>
-  </body>
+    <h2 style="margin-top: 16px">My user id (sub)</h2>
+    <pre id="out-sub">(not signed in)</pre>
+
+    <h2 style="margin-top: 16px">Debug</h2>
+    <pre id="out-debug"></pre>
+
+
+    <!-- input section -->
+    <h1>DB operation</h1>
+    <form id="stock-info">
+
+      <div>
+        <label for="foodName">Food name: </label>
+        <input type="text" id="foodName" name="foodName" required>
+      </div>
+
+      <div>
+        <label for="price">Price: </label>
+        <input type="number" id="price" name="price" required min="0">
+      </div>
+      
+      <button id="btn-submit">Submit</button>
+
+    </form>
+  </div>
+
+  <script type="module" src="/src/ts/main.ts"></script>
+</body>
+
 </html>

@@ -1,11 +1,9 @@
 import { configureAuth, login, logout, getSub } from "./auth";
+import { $ } from "./utils";
+import "./database"
 
-function $(id: string) {
-  const el = document.getElementById(id);
-  if (!el) throw new Error(`Element not found: ${id}`);
-  return el;
-}
 
+// Login functions
 async function refresh() {
   const outSub = $("out-sub");
   const outDebug = $("out-debug");
